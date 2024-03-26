@@ -25,15 +25,25 @@ class ObjectDetectionService(
         image = np.zeros((640, 640, 3), dtype=int)
         _ = self.detection_model.predict(image, **{'verbose': False})
 
-        logger.info("Initialized intrusion detection service")
+        logger.info(f"Initialized object detection service with {self.detection_model.ckpt_path}")
 
     def DetectImage(self, request: DetectionRequest, context):
         image: np.ndarray = bytes_to_numpy(request.image)
         classes = request.classes
+        if len(classes):
+            det_kwargs = {
+                'classes': classes,
+                'verbose': False
+            }
+        else:
+            det_kwargs = {
+               'verbose': False
+            }
+
         logger.info(f"Received frame: {request.frame_id}")
 
         try:
-            results: list = self.detection_model.predict(source=image, **{'classes': classes, 'verbose': False})
+            results: list = self.detection_model.predict(source=image, **det_kwargs)
         except Exception:
             logger.error(f"Error in detection {traceback.format_exc()}")
             response_results = [Result(label="", score=0, xyxy=[], xywh=[], xyxyn=[], xywhn=[])]
@@ -43,7 +53,8 @@ class ObjectDetectionService(
                 results=response_results
             )
 
-        logger.info(f"Num Persons: {results[0].boxes.shape[0]}")
+        logger.info(f"Num objects: {results[0].boxes.shape[0]}")
+
         plot_im = results[0].plot()
         plot_im = cv2.imencode('.jpg', plot_im)[1].tobytes()
         boxes: Boxes = results[0].boxes
