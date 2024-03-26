@@ -1,4 +1,4 @@
-# grpc-ml-server
+# gRPC Object Detection Server
 gRPC server for Object Detection service. This is a personal project of Python implementation of a gRPC service with support for object detection from image and 
 video / camera stream. For object detection, **Ultralytics YOLO** 🚀 is utilized, by default **pretrained YOLOv8 (coco dataset)** model is used. Custom trained
 model can also be used.
