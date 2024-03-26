@@ -9,7 +9,7 @@ from config.settings import MAX_MESSAGE_LENGTH
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--service", type=str, required=True, help="Service task")
+    parser.add_argument("--service", type=str, default="object_detection", help="Service task")
     parser.add_argument("--model-path", type=str, default=None, help="Model path")
     parser.add_argument("--model-url", type=str, default=None, help="Model download URL")
     parser.add_argument("--host", type=str, default="localhost", help="Server host address")

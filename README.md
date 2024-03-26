@@ -45,8 +45,9 @@ Make sure to have _anaconda_ or _miniconda_ installed
 When adding a new service, proto file should be compiled with the following command:
 `bash compile_proto.sh <SERVICE_NAME>`
 
-`python server.py --host <HOST> --port <PORT> --max-workers <MAX_NUM_WORKERS>`
-[OPTIONAL] `--model-path <PATH_TO_CUSTOM_MODEL>  --model-url <DOWNLOAD_URL>`
+## Run server
+`python server.py --host <HOST> --port <PORT>`\
+[OPTIONAL] ` --max-workers <MAX_NUM_WORKERS> --model-path <PATH_TO_CUSTOM_MODEL>  --model-url <DOWNLOAD_URL>`
 
 
 # TODO
