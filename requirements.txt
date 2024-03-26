@@ -1,0 +1,6 @@
+grpcio
+grpcio-tools
+opencv-python
+ultralytics==8.1.28
+python-dotenv
+loguru
