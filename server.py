@@ -1,5 +1,6 @@
 from concurrent import futures
 from utils.logger import logger
+from utils.helper import download_model
 import os
 import grpc
 import argparse
@@ -27,26 +28,22 @@ def serve():
     service = SERVICE_MAP[args.service]['service']
     add_servicer_func = SERVICE_MAP[args.service]['add_servicer']
 
-    # Define model path and download URL
+    # Download model file if required
     if args.model_path is not None:
-        if not os.path.exists(args.model_path):
-            assert args.model_url is not None, "Please provide a download URL for model!"
         model_path = args.model_path
-        url = args.model_url
+        if not os.path.exists(args.model_path) and args.service in DOWNLOAD_REQUIRED:
+            assert args.model_url is not None, "Please provide a download URL for model!"
+            url = args.model_url
+            download_model(url=url, output_file=model_path)
     else:
         model_path = SERVICE_MAP[args.service]['model_path']
         if args.service in DOWNLOAD_REQUIRED:
             url = SERVICE_MAP[args.service]['model_url']
+            download_model(url=url, output_file=model_path)
 
-    # Download model if not exists
-    if args.service in DOWNLOAD_REQUIRED and not os.path.exists(model_path):
-        add_servicer_func(
-            service(model_path, url), server
-        )
-    else:
-        add_servicer_func(
-            service(model_path), server
-        )
+    add_servicer_func(
+        service(model_path), server
+    )
 
     server.add_insecure_port(f"{args.host}:{args.port}")
     server.start()
